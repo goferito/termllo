@@ -10,6 +10,14 @@ Trello on the Terminal
 2. `npm i`
 3. `node app.js`
 
+## On development
+Nodemon and blessed don't play very well together. To avoid nodemon
+messing with input run it as `nodemon -I app.js`.
+
+For debuging, the best option I found so far is to console.error in the
+code, pipe stderr to a file (`nodemon -I app.js 2>> /tmp/termllo.log`), and
+tail on a different terminal that file (`tail -f /tmp/termllo.log`)
+
 ## License
 MIT © Sadoht Gomez Fernandez
 

@@ -15,15 +15,15 @@ const TrelloManager = require('./TrelloManager')
 const auth = require('./auth')
 
 
-/******************  MVP  ****************
- *
+/****************************  MVP  *************************
+ *                                                          *
  *  scroll lists so I can see them all
- *
+ *                                                          *
  *  jsonfile cache properly working
- *
+ *                                                          *
  *  select board dialog
- *
- *****************************************/
+ *                                                          *
+ ************************************************************/
 
 
 const tMan = new TrelloManager(auth)
@@ -404,3 +404,4 @@ function drawUI (store) {
   // Initial render
   screen.render()
 }
+

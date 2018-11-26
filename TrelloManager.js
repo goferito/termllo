@@ -21,7 +21,7 @@ class TrelloManager {
   async fillStore () {
 
     //TODO
-    //always download the boards. save the last modified time,
+    // always download the boards. save the last modified time,
     // and check if it need to be updated
     // if does, download lists and cards
     // if not, return stored data
@@ -58,8 +58,8 @@ class TrelloManager {
   loadBoards () {
     return new Promise((resolve, reject) => {
       const boardsFile = '/tmp/termllo-boards.json'
-      const storedBoards = this.loadFrom(boardsFile)
-      if (storedBoards) return resolve(storedBoards)
+      //const storedBoards = this.loadFrom(boardsFile)
+      //if (storedBoards) resolve(storedBoards)
 
       console.log('Downloading boards data...')
       this.api.get('/1/members/me/boards', (err, data) => {
@@ -67,7 +67,11 @@ class TrelloManager {
         const starred = data
             .filter(board => board.starred)
             .sort((a, b) => new Date(b.dateLastView) - new Date(a.dateLastView))
-            .map(board => ({id: board.id, name: board.name}))
+            .map(board => ({
+              id: board.id,
+              name: board.name,
+              lastMod: board.dateLastActivity,
+            }))
         jsonfile.writeFileSync(boardsFile, starred)
         return resolve(starred)
       })
@@ -81,8 +85,8 @@ class TrelloManager {
   loadCards (boardId) {
     return new Promise((resolve, reject) => {
       const cardsFile = `/tmp/termllo-cards-${boardId}.json`
-      const storedCards = this.loadFrom(cardsFile)
-      if (storedCards) return resolve(storedCards)
+      //const storedCards = this.loadFrom(cardsFile)
+      //if (storedCards) return resolve(storedCards)
 
       console.log('Downloading cards data...')
       this.api.get(`/1/boards/${boardId}/cards`, (err, data) => {
@@ -98,7 +102,7 @@ class TrelloManager {
           byList[card.idList] = byList[card.idList] || []
           byList[card.idList].push(card)
           return byList
-        })
+        }, {})
 
         jsonfile.writeFileSync(cardsFile, cards)
         return resolve(cards)
@@ -113,8 +117,8 @@ class TrelloManager {
   loadLists (boardId) {
     return new Promise((resolve, reject) => {
       const listsFile = `/tmp/termllo-lists-${boardId}.json`
-      const storedLists = this.loadFrom(listsFile)
-      if (storedLists) return resolve(storedLists)
+      //const storedLists = this.loadFrom(listsFile)
+      //if (storedLists) return resolve(storedLists)
 
       console.log('Downloading lists data...')
       this.api.get(`/1/boards/${boardId}/lists`, (err, data) => {
@@ -129,10 +133,18 @@ class TrelloManager {
 
   /**
    * Moves a card to the given position in the given list
+   *
+   * Note: To avoid hammering the api when moving a card several
+   * positions up/down, or several lists away, the api call is
+   * postponed with a timeout. If a new movement is done before
+   * timeout, the toList and toPos are updated, and the timeout reset.
+   *
    * @param {String} fromList - List ID of the current card list
    * @param {Number} fromPos  - Index in the list of the current card
    */
   moveCard ({fromList, fromPos, toList, toPos}) {
+
+    if (this.moveTimeout) clearTimeout(this.moveTimeout)
 
     // Remove the card from the list
     const card = this.cards[fromList].splice(fromPos, 1)[0]
@@ -155,11 +167,20 @@ class TrelloManager {
     return new Promise((resolve, reject) => {
 
       //TODO remove for production
-      return resolve({
-        fromList: this.cards[fromList].map(card => card.name),
-        toList: this.cards[toList].map(card => card.name),
-      })
+      //this.moveTimeout = setTimeout(() => {
+        //return resolve({
+          //fromList: this.cards[fromList].map(card => card.name),
+          //toList: this.cards[toList].map(card => card.name),
+        //}, 1000)
+      //})
 
+      //return
+
+      //TODO
+      // It makes no sense to have a promise. UI should refresh with
+      // the keypress. If everything goes ok with the api call, no
+      // further action is needed, otherwise, the screen should be
+      // re-rendered
       this.api.put(`/1/cards/${card.id}`,
         { idList: toList, pos: trelloPosTo },
         (err, data) => {
@@ -186,13 +207,13 @@ class TrelloManager {
     return new Promise((resolve, reject) => {
 
       //TODO remove for production
-      const card = {
-        name,
-        desc,
-        idList,
-      }
-      this.cards[idList] = [card, ...this.cards[idList]]
-      return resolve(card)
+      //const card = {
+        //name,
+        //desc,
+        //idList,
+      //}
+      //this.cards[idList] = [card, ...this.cards[idList]]
+      //return resolve(card)
 
       this.api.post('/1/cards', {
         name,
