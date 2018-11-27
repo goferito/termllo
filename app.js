@@ -14,10 +14,10 @@ const TrelloManager = require('./TrelloManager')
 
 const auth = require('./auth')
 
+const MIN_COL_WIDTH = 30
+
 
 /****************************  MVP  *************************
- *                                                          *
- *  scroll lists so I can see them all
  *                                                          *
  *  jsonfile cache properly working
  *                                                          *
@@ -96,6 +96,14 @@ function drawUI (store) {
       const numLists = tMan.lists.length
       tMan.activeBoardIdx = Math.max(0, tMan.activeBoardIdx - 1)
       listBoxes[tMan.activeBoardIdx].focus()
+
+      const screenWidth = process.stdout.columns
+      const nCols = Math.floor(screenWidth / MIN_COL_WIDTH)
+      const offset = Math.max(tMan.activeBoardIdx - (nCols - 1), 0) * MIN_COL_WIDTH
+      listBoxes.forEach((box, i) => {
+        box.left = MIN_COL_WIDTH * i - offset
+      })
+
       screen.render()
     })
 
@@ -104,6 +112,14 @@ function drawUI (store) {
       const numLists = tMan.lists.length
       tMan.activeBoardIdx = Math.min(numLists - 1, tMan.activeBoardIdx + 1)
       listBoxes[tMan.activeBoardIdx].focus()
+
+      const screenWidth = process.stdout.columns
+      const nCols = Math.floor(screenWidth / MIN_COL_WIDTH)
+      const offset = Math.max(tMan.activeBoardIdx - (nCols - 1), 0) * MIN_COL_WIDTH
+      listBoxes.forEach((box, i) => {
+        box.left = MIN_COL_WIDTH * i - offset
+      })
+
       screen.render()
     })
 
