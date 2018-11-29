@@ -1,8 +1,12 @@
 {
   "name": "termllo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Terminal Trello",
   "main": "app.js",
+  "preferGlobal": true,
+  "bin": {
+    "termllo": "./bin/termllo.js"
+  },
   "directories": {
     "test": "test"
   },
