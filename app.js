@@ -41,6 +41,11 @@ function drawUI (store) {
   // Quit on Control-C.
   screen.key('C-c', () => process.exit(0))
 
+  // Show boards dialog
+  screen.key('b', () => {
+    boardList.show()
+    boardList.focus()
+  })
 
   const listBoxes = tMan.lists.map((list, i) => {
     const lBox = blessed.list({
@@ -222,6 +227,71 @@ function drawUI (store) {
     screen.append(list)
   })
   listBoxes[0].focus()
+
+  const boardList = blessed.list({
+    parent: screen,
+    shadow: true,
+    left: '25%',
+    width: '50%',
+    top: '35%',
+    height: '25%',
+    keys: false,
+    items: tMan.boards.map(b => b.name),
+    border: {
+      type: 'line',
+    },
+    label: `[ Boards ]`,
+    scrollbar: true,
+    style: {
+      label: {
+        fg: 'gray',
+        bold: true,
+      },
+      selected: {
+        bg: 'black',
+        fg: 'white',
+      },
+      item: {
+        bg: 'black',
+        height: '100',
+      },
+      focus: {
+        selected: {
+          bg: 'blue',
+          bold: true,
+        },
+        border: {
+          fg: 'cyan',
+        },
+        label: {
+          fg: 'cyan',
+        },
+      },
+      scrollbar: {
+        bg: 'blue',
+      },
+    },
+  })
+
+  // Select next board
+  boardList.key(['j'], () => boardList.down(1))
+
+  // Select prev board
+  boardList.key(['k'], () => boardList.up(1))
+
+  // Close board dialog
+  boardList.key(['q', 'escape'], () => boardList.hide())
+  boardList.key(['enter'], () => {
+    tMan.fillStore({boardIdx: boardList.selected})
+    .then((store) => {
+      screen.destroy()
+      drawUI(store)
+    })
+    .catch((err) => {
+      console.error(err)
+      process.exit(1)
+    })
+  })
 
 
   const cardForm = blessed.form({
@@ -408,13 +478,14 @@ function drawUI (store) {
   })
 
   // Cancel and close
-  cardForm.key(['c', 'q', 'u'], () => {
+  cardForm.key(['escape', 'c', 'q', 'u'], () => {
     cardForm.reset()
     cardForm.hide()
   })
 
   // Hidden at start
   cardForm.hide()
+  boardList.hide()
 
 
   // Initial render

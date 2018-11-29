@@ -18,15 +18,16 @@ class TrelloManager {
   /**
    * Loads the data for the active board
    */
-  async fillStore () {
+  async fillStore ({ boardIdx } = {}) {
 
-    //TODO
-    // always download the boards. save the last modified time,
-    // and check if it need to be updated
-    // if does, download lists and cards
-    // if not, return stored data
+    if (!this.boards) this.boards = await this.loadBoards()
 
-    this.boards = await this.loadBoards()
+    if (Number.isInteger(boardIdx)) {
+      this.activeBoardIdx = boardIdx
+      this.activeListIdx  = 0
+    }
+
+    this.activeBoardName = this.boards[this.activeBoardIdx].name
     this.activeBoardId = this.boards[this.activeBoardIdx].id
     this.lists = await this.loadLists(this.activeBoardId)
     this.cards = await this.loadCards(this.activeBoardId)

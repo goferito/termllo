@@ -10,6 +10,9 @@ Trello on the Terminal
 2. `npm i`
 3. `node app.js`
 
+## TODO
+* Check for trello server data from time to time to corroborate termllo state
+
 ## On development
 Nodemon and blessed don't play very well together. To avoid nodemon
 messing with input run it as `nodemon -I app.js`.
