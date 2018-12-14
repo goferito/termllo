@@ -29,7 +29,9 @@
   "homepage": "https://github.com/goferito/termllo#readme",
   "dependencies": {
     "blessed": "^0.1.81",
+    "inquirer": "^6.2.1",
     "jsonfile": "^4.0.0",
-    "node-trello": "^1.3.0"
+    "node-trello": "^1.3.0",
+    "replace-in-file": "^3.4.2"
   }
 }
