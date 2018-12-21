@@ -15,9 +15,9 @@ Trello Web or the Trello App is necessary to see something in Termllo.
 More advance features will be implemented on the future. If someone out there
 ever gets to really use this, any feedback would be really appreciated.
 
-```
-//TODO Screenshot here
-```
+
+![Alt text](demo.gif?raw=true "Demo")
+
 
 *Made with <3 by Mr. Goferito*
 
