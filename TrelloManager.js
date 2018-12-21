@@ -167,16 +167,6 @@ class TrelloManager {
 
     return new Promise((resolve, reject) => {
 
-      //TODO remove for production
-      //this.moveTimeout = setTimeout(() => {
-        //return resolve({
-          //fromList: this.cards[fromList].map(card => card.name),
-          //toList: this.cards[toList].map(card => card.name),
-        //}, 1000)
-      //})
-
-      //return
-
       //TODO
       // It makes no sense to have a promise. UI should refresh with
       // the keypress. If everything goes ok with the api call, no
@@ -207,15 +197,6 @@ class TrelloManager {
   }) {
     return new Promise((resolve, reject) => {
 
-      //TODO remove for production
-      //const card = {
-        //name,
-        //desc,
-        //idList,
-      //}
-      //this.cards[idList] = [card, ...this.cards[idList]]
-      //return resolve(card)
-
       this.api.post('/1/cards', {
         name,
         desc,
@@ -224,7 +205,7 @@ class TrelloManager {
       }, (err, card) => {
         if (err) return reject(err)
 
-        this.cards[idList] = [card, ...this.cards[idList]]
+        this.cards[idList] = [card, ...(this.cards[idList] || [])]
 
         return resolve({
           id: card.id,
