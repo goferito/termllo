@@ -56,6 +56,7 @@ create that file yourself from the `auth.js.example` on the root of this repo*
 
 ## TODO
 - [ ] Check for trello server data from time to time to corroborate termllo state
+- [ ] Show number of unsync changes
 - [x] Prompt for trello token if missing, and save it in $HOME/.termllo/auth.js
 - [ ] Add screenshot to readme
 - [ ] Delay and pool move requests to minimize api calls

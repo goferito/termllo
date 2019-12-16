@@ -177,6 +177,7 @@ class TrelloManager {
         (err, data) => {
         if (err) return reject(err)
         card.pos = data.pos
+        card.idList = data.idList
 
         return resolve({
           fromList: this.cards[fromList].map(card => card.name),

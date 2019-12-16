@@ -1,6 +1,6 @@
 {
   "name": "termllo",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Terminal Trello",
   "main": "app.js",
   "preferGlobal": true,
